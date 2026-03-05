@@ -13,7 +13,17 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        // creating return array
+        double[] returnArray = new double[length];
+
+        // entering for loop. This loop will start with one and end when i is equal the length provided
+        for (int i = 1; i <= length; i++)
+        {
+            // getting 0 based index for array and then adding the requested number times the current i variable
+            returnArray[i - 1] = number * i;
+        }
+
+        return returnArray;
     }
 
     /// <summary>
@@ -29,5 +39,20 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // getting point in list where cut off happens
+        int cutoffPoint = data.Count - amount;
+
+        // creating temp list to store information
+
+        /* entering for loop that will take the current element out of the list and store it in a temporary element. 
+        *  Once the element is removed, then it is appended to the end of the list. 
+        */
+        for (int i = 0; i < cutoffPoint; i++)
+        {
+            int tempNum = data[0];
+            data.Remove(tempNum);
+            data.Add(tempNum);
+        }
     }
 }
