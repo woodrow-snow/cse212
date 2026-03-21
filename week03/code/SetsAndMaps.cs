@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 public static class SetsAndMaps
@@ -21,8 +22,42 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        // creating hash set to store values
+        HashSet<string> wordSet = new HashSet<string>(words);
+
+        // creating return array
+        List<string> returnWords = new List<string>();
+
+        foreach(string w in wordSet)
+        {
+            // checking to see if word is double letter. EX: aa
+            char[] wordArray = w.ToArray();
+            if (wordArray[0] == wordArray[1])
+            {
+                wordSet.Remove(w);
+            }
+
+            // getting reversed word
+            string reversedWord = new string(wordArray.Reverse().ToArray());
+
+            // checking if reversed word and word are in set
+            if (wordSet.Contains(w) && wordSet.Contains(reversedWord))
+            {
+                // creating concat string and adding to return array
+                string addStr = $"{reversedWord} & {w}";
+                returnWords.Add(addStr);
+
+                wordSet.Remove(reversedWord);
+                wordSet.Remove(w);
+            }
+            else
+            {
+                // removing word if it does not have a mirror
+                wordSet.Remove(w);
+            }
+        }
+
+        return returnWords.ToArray();
     }
 
     /// <summary>
@@ -43,6 +78,20 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            int degreeCol = 3; // which column the degree is in for a 0 based index
+
+            // getting degree from current row
+            string degree = fields[degreeCol];
+
+            // checking if degree is in dict, if is - increase counter, if not - add to dict with value of 1
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree] += 1;
+            }
+            else
+            {
+                degrees.Add(degree, 1);
+            }
         }
 
         return degrees;
@@ -66,8 +115,74 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // creating dict
+        var word1Dict = new Dictionary<char, int>();
+        var word2Dict = new Dictionary<char, int>();
+
+        // setting word1 and 2 to lower and removing spaces
+        word1 = word1.ToLower();
+        word2 = word2.ToLower();
+
+        word1 = String.Join("",word1.Split(" "));
+        word2 = String.Join("", word2.Split(" "));
+
+        // checking to see if words are the same length
+        if (word1.Length != word2.Length)
+        {
+            return false;
+        }
+
+        // adding words to dicts
+        for (int i = 0; i < word1.Length; i++)
+        {
+            // if statement for first word
+            if (word1Dict.ContainsKey(word1[i]))
+            {
+                word1Dict[word1[i]] += 1;
+            }
+            else
+            {
+                word1Dict.Add(word1[i], 1);
+            }
+
+            // if statement for second word
+            if (word2Dict.ContainsKey(word2[i]))
+            {
+                word2Dict[word2[i]] += 1;
+            }
+            else
+            {
+                word2Dict.Add(word2[i], 1);
+            }
+        }
+
+        // looping through word1Dict and comparing each letter to word2dict
+        bool IsAnagram = false;
+
+        foreach (KeyValuePair<char, int> letter in word1Dict)
+        {
+            // if word1 and 2 dict contain the same key
+            var key = letter.Key;
+            var value = letter.Value;
+
+            if (word2Dict.ContainsKey(key))
+            {
+                if (word2Dict[key] == word1Dict[key])
+                {
+                    IsAnagram = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return IsAnagram;
     }
 
     /// <summary>
@@ -101,6 +216,19 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+
+        string[] earthquakes = new string[6];
+
+        for (int i = 0; i < 6; i++)
+        {
+            earthquakes[i] = $"{featureCollection.features[i].properties.place} - Mag {featureCollection.features[i].properties.mag}";
+        }
+
+        foreach (var e in earthquakes)
+        {
+            Console.WriteLine(e);
+        }
+
+        return earthquakes;
     }
 }
